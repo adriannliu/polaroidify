@@ -30,7 +30,7 @@ export class PolaroidManager {
             alert('Failed to load polaroid template. Please try again.');
         };
         
-        polaroidImg.src = 'assets/vecteezy_blank-frame-template_50232056.png';
+        polaroidImg.src = '/vecteezy_blank-frame-template_50232056.png';
     }
 
     private renderPolaroid(ctx: CanvasRenderingContext2D, polaroidImg: HTMLImageElement, tracks: NodeListOf<Element>): void {

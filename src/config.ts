@@ -3,7 +3,7 @@ import type { SpotifyConfig } from './types';
 export const config: SpotifyConfig = {
     clientId: import.meta.env.VITE_CLIENT_ID || '',
     clientSecret: import.meta.env.VITE_CLIENT_SECRET || '',
-    redirectUri: 'http://127.0.0.1:8000/',
+    redirectUri: import.meta.env.VITE_REDIRECT_URI || 'https://polaroidify-three.vercel.app/',
     scope: 'user-top-read user-read-recently-played user-library-read user-read-private user-read-email'
 };
 

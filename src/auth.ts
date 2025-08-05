@@ -28,7 +28,9 @@ export class AuthManager {
     }
 
     handleLogin(): void {
+        console.log('Redirect URI being used:', config.redirectUri);
         const authUrl = `https://accounts.spotify.com/authorize?client_id=${config.clientId}&response_type=code&redirect_uri=${encodeURIComponent(config.redirectUri)}&scope=${encodeURIComponent(config.scope)}`;
+        console.log('Full auth URL:', authUrl);
         window.location.href = authUrl;
     }
 

@@ -49,6 +49,7 @@ export class SpotifyAPI {
 
     async getCustomTopTracks(limit: number, timeframe: Timeframe, customWeights?: CustomWeights): Promise<any[]> {
         console.log(`Fetching data for ${timeframe} time period...`);
+        console.log('Custom weights received:', customWeights);
         
         let primaryTracks: any[] = [];
         let spotifyTopTracks: any[] = [];
@@ -107,6 +108,8 @@ export class SpotifyAPI {
             timeOfDay: 1,
             timeframeMultiplier: 1
         };
+        
+        console.log('Using weights for scoring:', weights);
         
         recentlyPlayed.forEach((item) => {
             let track, trackId, playedAt;
@@ -210,12 +213,21 @@ export class SpotifyAPI {
                 timeframeMultiplier *= 2;
             }
             
-            trackScore.score = (
+            const finalScore = (
                 playCount * weights.playCount * timeframeMultiplier +
                 recency * weights.recency * timeframeMultiplier +
                 userRating * weights.userRating +
                 timeOfDay * weights.timeOfDay
             );
+            
+            trackScore.score = finalScore;
+            
+            // Debug first few tracks
+            if (trackMap.size <= 3) {
+                console.log(`Track: ${trackScore.track.name} - Score: ${finalScore.toFixed(2)}`);
+                console.log(`  Factors: playCount=${playCount}, recency=${recency.toFixed(2)}, userRating=${userRating}, timeOfDay=${timeOfDay.toFixed(2)}`);
+                console.log(`  Weights: playCount=${weights.playCount}, recency=${weights.recency}, userRating=${weights.userRating}, timeOfDay=${weights.timeOfDay}`);
+            }
         });
         
         return Array.from(trackMap.values());

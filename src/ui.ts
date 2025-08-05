@@ -102,11 +102,15 @@ export class UIManager {
 
     private setupSliderEventListeners(): void {
         const sliders = document.querySelectorAll('.weight-slider') as NodeListOf<HTMLInputElement>;
+        console.log('Found sliders:', sliders.length);
+        
         sliders.forEach(slider => {
             slider.addEventListener('input', (e) => {
                 const target = e.target as HTMLInputElement;
                 const value = parseFloat(target.value);
                 const weightType = target.id.replace('-weight', '') as keyof CustomWeights;
+                
+                console.log(`Slider changed: ${weightType} = ${value}`);
                 
                 // Update the display value
                 const valueSpan = document.getElementById(`${weightType}-value`);
@@ -116,9 +120,11 @@ export class UIManager {
                 
                 // Update the weights object
                 this.customWeights[weightType] = value;
+                console.log('Updated custom weights:', this.customWeights);
                 
                 // Trigger reload if custom algorithm is active
                 if (this.currentAlgorithm === 'custom') {
+                    console.log('Triggering reload due to slider change');
                     this.triggerReload();
                 }
             });

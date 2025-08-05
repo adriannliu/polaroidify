@@ -39,6 +39,35 @@ export class UIManager {
         return { ...this.customWeights };
     }
 
+    // Test function to set extreme weights
+    setTestWeights(): void {
+        this.customWeights = {
+            playCount: 50,  // Very high play count weight
+            recency: 0,     // No recency weight
+            userRating: 0,  // No user rating weight
+            timeOfDay: 0,   // No time of day weight
+            timeframeMultiplier: 1
+        };
+        
+        // Update slider values
+        const sliders = document.querySelectorAll('.weight-slider') as NodeListOf<HTMLInputElement>;
+        sliders.forEach(slider => {
+            const weightType = slider.id.replace('-weight', '') as keyof CustomWeights;
+            if (this.customWeights[weightType] !== undefined) {
+                slider.value = this.customWeights[weightType].toString();
+                const valueSpan = document.getElementById(`${weightType}-value`);
+                if (valueSpan) {
+                    valueSpan.textContent = this.customWeights[weightType].toString();
+                }
+            }
+        });
+        
+        console.log('Test weights set:', this.customWeights);
+        if (this.currentAlgorithm === 'custom') {
+            this.triggerReload();
+        }
+    }
+
     getUserUploadedImage(): HTMLImageElement | null {
         return this.userUploadedImage;
     }
@@ -83,6 +112,14 @@ export class UIManager {
                 }
             });
         });
+
+        // Add test weights button listener
+        const testWeightsBtn = document.getElementById('test-weights-btn');
+        if (testWeightsBtn) {
+            testWeightsBtn.addEventListener('click', () => {
+                this.setTestWeights();
+            });
+        }
     }
 
     private setupWeightSliders(): void {

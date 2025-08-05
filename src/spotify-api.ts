@@ -88,6 +88,12 @@ export class SpotifyAPI {
         );
         
         trackAnalysis.sort((a, b) => b.score - a.score);
+        
+        console.log('Top 5 tracks after custom scoring:');
+        trackAnalysis.slice(0, 5).forEach((item, index) => {
+            console.log(`${index + 1}. ${item.track.name} - Score: ${item.score.toFixed(2)}`);
+        });
+        
         return trackAnalysis.slice(0, limit).map(item => item.track);
     }
 
@@ -110,6 +116,7 @@ export class SpotifyAPI {
         };
         
         console.log('Using weights for scoring:', weights);
+        console.log('Data sources - Recently played:', recentlyPlayed.length, 'Saved tracks:', savedTracks.length, 'Spotify top:', spotifyTopTracks.length);
         
         recentlyPlayed.forEach((item) => {
             let track, trackId, playedAt;
@@ -198,6 +205,8 @@ export class SpotifyAPI {
             const spotifyRankBonus = Math.max(1, 10 - index) / 10 * 0.1;
             trackScore.factors.playCount += spotifyRankBonus;
         });
+        
+        console.log('Final track analysis - Total tracks:', trackMap.size);
         
         trackMap.forEach(trackScore => {
             const { playCount, recency, userRating, timeOfDay } = trackScore.factors;

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Respot - Your Top Tracks</title>
+        <link rel="stylesheet" href="src/style.css">
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>🎵 Respot</h1>
+                <p>Discover your top tracks on Spotify</p>
+            </header>
+            
+            <main>
+                <div id="login-section" class="section">
+                    <button id="login-btn" class="btn btn-primary">
+                        Login with Spotify
+                    </button>
+                </div>
+                
+                <div id="tracks-section" class="section hidden">
+                    <div class="header-controls">
+                        <h2>Your Top Tracks</h2>
+                        <button id="logout-btn" class="btn btn-secondary">Logout</button>
+                    </div>
+                    
+                    <div class="algorithm-selector">
+                        <h3>Choose Algorithm:</h3>
+                        <button class="btn btn-secondary active" data-algorithm="spotify">Spotify's Algorithm</button>
+                        <button class="btn btn-secondary" data-algorithm="custom">Custom Algorithm (Experimental)</button>
+                    </div>
+                    
+                    <div class="timeframe-selector">
+                        <h3>Time Period:</h3>
+                        <button class="btn btn-secondary active" data-timeframe="short_term">Last 4 Weeks</button>
+                        <button class="btn btn-secondary" data-timeframe="medium_term">Last 6 Months</button>
+                        <button class="btn btn-secondary" data-timeframe="long_term">All Time</button>
+                        <button class="btn btn-secondary" data-timeframe="recent">10 Recent</button>
+                    </div>
+                    
+                    <div class="track-count-selector">
+                        <h3>Number of Tracks:</h3>
+                        <button class="btn btn-secondary active" data-track-count="10">10 Tracks</button>
+                        <button class="btn btn-secondary" data-track-count="25">25 Tracks</button>
+                        <button class="btn btn-secondary" data-track-count="50">50 Tracks</button>
+                    </div>
+                    
+                    <div class="polaroid-controls">
+                        <div class="button-container">
+                            <button id="polaroid-btn" class="btn btn-primary">📸 Polaroid-ize My Top 10</button>
+                            <button id="upload-photo-btn" class="btn btn-secondary">🖼️ Upload Photo</button>
+                            <input type="file" id="photo-upload" accept="image/*" style="display: none;">
+                        </div>
+                    </div>
+                    
+                    <div id="polaroid-preview" class="polaroid-preview hidden">
+                        <h3>Your Polaroid Preview</h3>
+                        <div class="polaroid-container">
+                            <canvas id="polaroid-canvas"></canvas>
+                        </div>
+                        <button id="download-polaroid-btn" class="btn btn-primary">📥 Download Polaroid</button>
+                        <button id="close-polaroid-btn" class="btn btn-secondary">✕ Close Preview</button>
+                    </div>
+                    
+                    <div id="tracks-container" class="tracks-grid">
+                        <!-- Tracks will be loaded here -->
+                    </div>
+                    <div id="loading" class="loading hidden">
+                        <div class="spinner"></div>
+                        <p>Loading your top tracks...</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+        
+        <script src="src/main.ts" type="module"></script>
+    </body>
+</html>

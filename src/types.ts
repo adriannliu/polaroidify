@@ -12,6 +12,14 @@ export interface TrackScore {
     };
 }
 
+export interface CustomWeights {
+    playCount: number;
+    recency: number;
+    userRating: number;
+    timeOfDay: number;
+    timeframeMultiplier: number;
+}
+
 export interface SpotifyConfig {
     clientId: string;
     clientSecret: string;

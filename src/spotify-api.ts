@@ -1,4 +1,4 @@
-import type { Timeframe, TrackScore } from './types';
+import type { Timeframe, TrackScore, CustomWeights } from './types';
 import { AuthManager } from './auth';
 
 export class SpotifyAPI {
@@ -47,7 +47,7 @@ export class SpotifyAPI {
         return data.items;
     }
 
-    async getCustomTopTracks(limit: number, timeframe: Timeframe): Promise<any[]> {
+    async getCustomTopTracks(limit: number, timeframe: Timeframe, customWeights?: CustomWeights): Promise<any[]> {
         console.log(`Fetching data for ${timeframe} time period...`);
         
         let primaryTracks: any[] = [];
@@ -82,7 +82,8 @@ export class SpotifyAPI {
             primaryTracks, 
             savedTracks,
             spotifyTopTracks,
-            timeframe
+            timeframe,
+            customWeights
         );
         
         trackAnalysis.sort((a, b) => b.score - a.score);
@@ -93,9 +94,19 @@ export class SpotifyAPI {
         recentlyPlayed: any[], 
         savedTracks: any[], 
         spotifyTopTracks: any[],
-        timeframe: Timeframe
+        timeframe: Timeframe,
+        customWeights?: CustomWeights
     ): TrackScore[] {
         const trackMap = new Map<string, TrackScore>();
+        
+        // Use custom weights if provided, otherwise use defaults
+        const weights = customWeights || {
+            playCount: 10,
+            recency: 3,
+            userRating: 8,
+            timeOfDay: 1,
+            timeframeMultiplier: 1
+        };
         
         recentlyPlayed.forEach((item) => {
             let track, trackId, playedAt;
@@ -188,22 +199,22 @@ export class SpotifyAPI {
         trackMap.forEach(trackScore => {
             const { playCount, recency, userRating, timeOfDay } = trackScore.factors;
             
-            let timeframeMultiplier = 1;
+            let timeframeMultiplier = weights.timeframeMultiplier;
             if (timeframe === 'short_term') {
-                timeframeMultiplier = 1.5;
+                timeframeMultiplier *= 1.5;
             } else if (timeframe === 'medium_term') {
-                timeframeMultiplier = 1.0;
+                timeframeMultiplier *= 1.0;
             } else if (timeframe === 'long_term') {
-                timeframeMultiplier = 0.5;
+                timeframeMultiplier *= 0.5;
             } else if (timeframe === 'recent') {
-                timeframeMultiplier = 2;
+                timeframeMultiplier *= 2;
             }
             
             trackScore.score = (
-                playCount * 10 * timeframeMultiplier +
-                recency * 3 * timeframeMultiplier +
-                userRating * 8 +
-                timeOfDay * 1
+                playCount * weights.playCount * timeframeMultiplier +
+                recency * weights.recency * timeframeMultiplier +
+                userRating * weights.userRating +
+                timeOfDay * weights.timeOfDay
             );
         });
         

@@ -32,6 +32,30 @@
                         <button class="btn btn-secondary" data-algorithm="custom">Custom Algorithm (Experimental)</button>
                     </div>
                     
+                    <div id="weight-sliders" class="weight-sliders hidden">
+                        <h3>Customize Algorithm Weights</h3>
+                        <div class="slider-group">
+                            <label for="playCount-weight">Play Count Weight: <span id="playCount-value">10</span></label>
+                            <input type="range" id="playCount-weight" min="1" max="20" value="10" class="weight-slider">
+                        </div>
+                        <div class="slider-group">
+                            <label for="recency-weight">Recency Weight: <span id="recency-value">3</span></label>
+                            <input type="range" id="recency-weight" min="0" max="10" value="3" class="weight-slider">
+                        </div>
+                        <div class="slider-group">
+                            <label for="userRating-weight">User Rating Weight: <span id="userRating-value">8</span></label>
+                            <input type="range" id="userRating-weight" min="0" max="15" value="8" class="weight-slider">
+                        </div>
+                        <div class="slider-group">
+                            <label for="timeOfDay-weight">Time of Day Weight: <span id="timeOfDay-value">1</span></label>
+                            <input type="range" id="timeOfDay-weight" min="0" max="5" value="1" class="weight-slider">
+                        </div>
+                        <div class="slider-group">
+                            <label for="timeframeMultiplier-weight">Timeframe Multiplier: <span id="timeframeMultiplier-value">1</span></label>
+                            <input type="range" id="timeframeMultiplier-weight" min="0.5" max="3" step="0.1" value="1" class="weight-slider">
+                        </div>
+                    </div>
+                    
                     <div class="timeframe-selector">
                         <h3>Time Period:</h3>
                         <button class="btn btn-secondary active" data-timeframe="short_term">Last 4 Weeks</button>

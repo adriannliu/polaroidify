@@ -1,16 +1,26 @@
 import { dom, hideLoading } from './dom';
-import type { Timeframe, Algorithm, TrackCount } from './types';
+import type { Timeframe, Algorithm, TrackCount, CustomWeights } from './types';
 
 export class UIManager {
     private currentTimeframe: Timeframe = 'short_term';
     private currentAlgorithm: Algorithm = 'spotify';
     private currentTrackCount: TrackCount = 10;
     private userUploadedImage: HTMLImageElement | null = null;
+    private customWeights: CustomWeights = {
+        playCount: 10,
+        recency: 3,
+        userRating: 8,
+        timeOfDay: 1,
+        timeframeMultiplier: 1
+    };
 
     constructor() {
+        console.log('UIManager constructor called');
         this.setupEventListeners();
         this.updateButtonText();
         this.updateUploadButtonState();
+        this.setupWeightSliders();
+        console.log('UIManager constructor completed');
     }
 
     getCurrentTimeframe(): Timeframe {
@@ -23,6 +33,10 @@ export class UIManager {
 
     getCurrentTrackCount(): TrackCount {
         return this.currentTrackCount;
+    }
+
+    getCustomWeights(): CustomWeights {
+        return { ...this.customWeights };
     }
 
     getUserUploadedImage(): HTMLImageElement | null {
@@ -71,6 +85,46 @@ export class UIManager {
         });
     }
 
+    private setupWeightSliders(): void {
+        console.log('Setting up weight sliders...');
+        
+        // Check if sliders exist in DOM
+        const slidersElement = document.getElementById('weight-sliders');
+        console.log('Weight sliders element found:', !!slidersElement);
+        if (slidersElement) {
+            console.log('Weight sliders HTML:', slidersElement.innerHTML.substring(0, 100) + '...');
+        }
+        
+        // Setup slider event listeners
+        this.setupSliderEventListeners();
+        console.log('Weight sliders setup complete');
+    }
+
+    private setupSliderEventListeners(): void {
+        const sliders = document.querySelectorAll('.weight-slider') as NodeListOf<HTMLInputElement>;
+        sliders.forEach(slider => {
+            slider.addEventListener('input', (e) => {
+                const target = e.target as HTMLInputElement;
+                const value = parseFloat(target.value);
+                const weightType = target.id.replace('-weight', '') as keyof CustomWeights;
+                
+                // Update the display value
+                const valueSpan = document.getElementById(`${weightType}-value`);
+                if (valueSpan) {
+                    valueSpan.textContent = value.toString();
+                }
+                
+                // Update the weights object
+                this.customWeights[weightType] = value;
+                
+                // Trigger reload if custom algorithm is active
+                if (this.currentAlgorithm === 'custom') {
+                    this.triggerReload();
+                }
+            });
+        });
+    }
+
     private triggerReload(): void {
         const event = new CustomEvent('tracksReloadRequested');
         document.dispatchEvent(event);
@@ -97,6 +151,27 @@ export class UIManager {
                 button.classList.add('active');
             }
         });
+
+        // Show/hide weight sliders based on algorithm selection
+        this.toggleWeightSliders(algorithm === 'custom');
+    }
+
+    private toggleWeightSliders(show: boolean): void {
+        console.log('Toggling weight sliders:', show);
+        const weightSliders = document.getElementById('weight-sliders');
+        console.log('Weight sliders element found:', !!weightSliders);
+        
+        if (weightSliders) {
+            if (show) {
+                weightSliders.classList.remove('hidden');
+                console.log('Weight sliders shown');
+            } else {
+                weightSliders.classList.add('hidden');
+                console.log('Weight sliders hidden');
+            }
+        } else {
+            console.error('Weight sliders element not found');
+        }
     }
 
     private setActiveTrackCount(trackCount: TrackCount): void {

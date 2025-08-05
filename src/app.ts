@@ -12,6 +12,7 @@ export class App {
     private polaroidManager: PolaroidManager;
 
     constructor() {
+        console.log('App constructor called');
         validateConfig();
         
         this.authManager = new AuthManager();
@@ -21,6 +22,7 @@ export class App {
         
         this.setupEventListeners();
         this.initialize();
+        console.log('App constructor completed');
     }
 
     private setupEventListeners(): void {
@@ -74,7 +76,8 @@ export class App {
                     
                 case 'custom':
                     try {
-                        tracks = await this.spotifyAPI.getCustomTopTracks(trackCount, timeframe);
+                        const customWeights = this.uiManager.getCustomWeights();
+                        tracks = await this.spotifyAPI.getCustomTopTracks(trackCount, timeframe, customWeights);
                     } catch (error) {
                         console.error('Custom algorithm failed, falling back to Spotify algorithm:', error);
                         tracks = await this.spotifyAPI.getTopTracks(trackCount, timeframe);
